@@ -2,6 +2,7 @@ import argparse
 import json
 import signal
 import sys
+import time
 
 import serial
 from PySide6.QtCore import QThread, Qt, QSize, QRectF, Signal, QObject
@@ -576,7 +577,9 @@ class Window(QMainWindow):
             self.worker_thread.controller.parse_message(text)
 
     def closeEvent(self, event):
-        self.controller.exit_requested = True
+        self.controller.terminate()
+        while self.controller.is_running:
+            time.sleep(0.01)
 
 
 class ControllerSignals(QObject):
@@ -598,6 +601,9 @@ class BackgroundThread(QThread):
 
     def run(self):
         self.controller.loop()
+
+    def terminate(self):
+        self.controller.terminate()
 
 
 def load_language(lan):
@@ -626,8 +632,6 @@ if __name__ == "__main__":
 
     language_dictionary = load_language(args.language)
 
-    # list serial ports
-    print(list(serial.tools.list_ports.comports()))
     # initialize controller
     controller_instance = Controller(args.left, args.right, args.microbit, NUM_TASKS, args.sim)
 

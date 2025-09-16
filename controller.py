@@ -1,5 +1,6 @@
 import logging
 import time
+from threading import Event
 
 from model import Coordinates, Storage, BLOXX_OFFSET_X, BLOXX_OFFSET_Z
 from model import Robot, LightSensor, Conveyor, RadioListener
@@ -34,6 +35,7 @@ class Controller:
     def __init__(self, device_left, device_right, device_microbit, num_tasks, sim=False, interval=0.005, verbose=False):
         self.parent = None
         self.exit_requested = False
+        self.is_running = False
         self.isDelivering = False
         self.items_delivered = 0
         self.current_storage_key = None
@@ -45,6 +47,7 @@ class Controller:
         self.orders = None
         self.tasks = None
         self.interval = interval
+        self.event = Event()
 
         if not sim:
             logger.info("Init Robot left: %s" % device_left)
@@ -129,7 +132,9 @@ class Controller:
         self._emit_state_update()
 
     def terminate(self):
-        self.exit_requested = True
+        if self.is_running:
+            self.exit_requested = True
+            self.event.set()
 
     def set_coordinate(self, key, name, value):
         if key in self.coordinates:
@@ -177,6 +182,7 @@ class Controller:
 
     def loop(self):
         """ main loop of the controller """
+        self.is_running = True
         self.items_delivered = 0
         self.reset_state()
         logger.info("starting controller main loop")
@@ -188,7 +194,10 @@ class Controller:
         self.robot_right.move(Robot.HOME_COORDINATES)
 
         while not self.exit_requested:
-            time.sleep(self.interval)
+            self.event.wait(self.interval)
+            if self.exit_requested:
+                break
+
             # left robot
             if self.robot_left:
                 pose_left = self.robot_left.pose()
@@ -282,6 +291,7 @@ class Controller:
             self.robot_left.close()
         if self.robot_right:
             self.robot_right.close()
+        self.is_running = False
 
     def parse_message(self, text):
         task_to_key = {
