@@ -1,6 +1,6 @@
 # Snack-o-Mation TecDay Module
 
-This folder contains the graphical user interface for the Snack-o-Mation TecDay Automation Module.
+This folder contains the graphical user interface for the Snack-o-Mation automation module developed by ABB Corporate Research Switzerland for the [SATW TecDays](https://mint.satw.ch/de/tecdays).
 
 ## License
 * This project is licensed under the terms of the MIT license (see LICENSE.txt).
@@ -19,18 +19,30 @@ The following software libraries are required by the GUI:
    Hint: On Ubuntu you can alternatively install the dependencies using the `apt` package manager:  
    `sudo apt install python3-qtpy-pyside6 python3-serial`
 
-2. Set group memberships for `tecday` user (Linux only, logout/login required):
+2. Set group memberships for your current user (Linux only, logout/login required):
     ```
-    sudo usermod -a -G dialout tecday
-    sudo usermod -a -G plugdev tecday
+    sudo usermod -a -G dialout $USER
+    sudo usermod -a -G plugdev $USER
     ```
 
-3.Install the udev rules (Linux only):
+3. Install udev rules to create stable symbolic links to the serial devices (Linux, optional):
+    Create a file called `/etc/udev/rules.d/90-dobot-microbit.rules` with the following content:  
     ```
-    cd udev
-    sudo cp *.rules /etc/udev/rules.d/
-    sudo udevadm control --reload-rules && sudo udevadm trigger
+   # left Dobot
+    SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60",ATTRS{serial}=="<replace-with-your-serial>",SYMLINK+="tty-dobot-left"
+    # right Dobot
+    SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60",ATTRS{serial}=="<replace-with-your-serial>",SYMLINK+="tty-dobot-right"
+    SUBSYSTEM=="usb", ATTR{idVendor}=="0d28", MODE="0664", GROUP="plugdev"
+    SUBSYSTEM=="tty", ATTRS{idVendor}=="0d28", MODE="0664", GROUP="plugdev",SYMLINK+="tty-microbit" 
+   ```
+    Replace the placeholders `<replace-with-your-serial>` with the serial number of the corresponding serial device. You can find the serial number for a given device, e.g. `/dev/ttyUSB1` with the following command: 
     ```
+   udevadm info -a -n /dev/ttyUSB1 | grep '{serial}'
+   ```
+   Reload the udev rules to activate them: 
+   ```
+   sudo udevadm control --reload-rules && sudo udevadm trigger
+   ```
 
 ## User Guide
 Start the UI with default serial port settings as follows:  
