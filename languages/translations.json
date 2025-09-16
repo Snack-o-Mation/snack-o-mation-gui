@@ -1,0 +1,58 @@
+{
+  "en": {
+      "Orders_1": "Orders from storage #1",
+      "Orders_2": "Orders from storage #2",
+      "Fill_1": "Goods in storage #1",
+      "Fill_2": "Goods in storage #2",
+      "Task": "Task",
+      "Robot_L": "Robot Left",
+      "Robot_R": "Robot Right",
+      "Storage_1": "Storage #1",
+      "Storage_2": "Storage #2",
+      "Release": "Release point",
+      "Pickup": "Pick-up point",
+      "Delivery": "Delivery Zone"
+  },
+  "it": {
+      "Orders_1": "Ordini magazzino 1",
+      "Orders_2": "Ordini magazzino 2",
+      "Fill_1": "Riempimento deposito 1",
+      "Fill_2": "Riempimento deposito 2",
+      "Task": "Esercizio",
+      "Robot_L": "Robot Sinistra",
+      "Robot_R": "Robot Destra",
+      "Storage_1": "Magazzino 1",
+      "Storage_2": "Magazzino 2",
+      "Release": "Punto di rilascio",
+      "Pickup": "Punto di ritiro",
+      "Delivery": "Deposito dolci"
+  },
+  "de": {
+      "Orders_1": "Bestellung Lager 1",
+      "Orders_2": "Bestellung Lager 2",
+      "Fill_1": "Füllstand Lager 1",
+      "Fill_2": "Füllstand Lager 2",
+      "Task": "Aufgabe",
+      "Robot_L": "Roboter Links",
+      "Robot_R": "Roboter Rechts",
+      "Storage_1": "Lager 1",
+      "Storage_2": "Lager 2",
+      "Release": "Ablage Förderband",
+      "Pickup": "Aufnahme Förderband",
+      "Delivery": "Warenausgabe"
+  },
+  "fr": {
+      "Orders_1": "Commande entrepôt 1",
+      "Orders_2": "Commande entrepôt 2",
+      "Fill_1": "Niveau d'entrepôt 1",
+      "Fill_2": "Niveau d'entrepôt 2",
+      "Task": "Tâche",
+      "Robot_L": "Robot gauche",
+      "Robot_R": "Robot droit",
+      "Storage_1": "Entrepôt 1",
+      "Storage_2": "Entrepôt 2",
+      "Release": "Point de restitution",
+      "Pickup": "Point de ramassage",
+      "Delivery": "Dépôt des bonbons"
+  }
+}
