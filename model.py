@@ -247,6 +247,10 @@ class Robot:
         # move robot arm to the place coordinates (plus specified z_hover)
         self.dobot.move_to(place_coords.x, place_coords.y, place_coords.z + z_hover, 0)
 
+    def release(self):
+        # disable suction cup
+        self.dobot.suck(False)
+
     def pose(self):
         try:
             data = self.dobot.pose()

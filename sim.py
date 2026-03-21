@@ -49,6 +49,9 @@ class SimRobot:
     def pickup_and_place(self, pickup_coords: Coordinates, place_coords: Coordinates, z_hover=50):
         pass
 
+    def release(self):
+        pass
+
     def pose(self):
         return self.current_pose
 

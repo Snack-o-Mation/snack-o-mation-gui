@@ -175,6 +175,9 @@ class Controller:
         self.isDelivering = False
         # stop the conveyor
         self.conveyor.stop()
+        # stop the suction
+        self.robot_left.release()
+        self.robot_right.release()
         # go to the home position
         self.robot_left.move(Robot.HOME_COORDINATES)
         self.robot_right.move(Robot.HOME_COORDINATES)
