@@ -151,8 +151,11 @@ class LightSensor:
         msg.params = bytearray([])
         msg.params.extend(bytearray([Robot.PORT_GP2]))
         response = self.dobot._send_command(msg)
-        state = struct.unpack_from('?', response.params, 0)[0]
-        return state
+        if response is None:
+            return False
+        else:
+            state = struct.unpack_from('?', response.params, 0)[0]
+            return state
 
 
 class Robot:
