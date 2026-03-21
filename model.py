@@ -74,6 +74,9 @@ class Storage:
         self.stock = value
         self.pos = 0
 
+    def get_next_position(self):
+        return self.pos
+
     def pop(self):
         if self.stock == 0:
             return None
