@@ -276,7 +276,10 @@ class RadioListener:
                     return None
                 else:
                     packet = packet.decode("ascii")
-                    return packet
+                    if packet == "\0":
+                        return None
+                    else:
+                        return packet
             except Exception as e:
                 logger.error("Error reading radio packet: %s" % e)
                 return None
