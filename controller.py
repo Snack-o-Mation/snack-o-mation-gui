@@ -13,6 +13,17 @@ BELT_DROPOFF_KEY = 'belt_dropoff'
 BELT_PICKUP_KEY = 'belt_pickup'
 DELIVERY_KEY = 'delivery'
 
+NUM_TASKS = 5
+
+# default coordinates
+default_coordinates = {
+    STORAGE1_KEY: Coordinates(x=119, y=183, z=-50),
+    STORAGE2_KEY: Coordinates(x=6, y=183, z=-50),
+    BELT_DROPOFF_KEY: Coordinates(x=266, y=91, z=5),
+    BELT_PICKUP_KEY: Coordinates(x=270, y=-6, z=5),
+    DELIVERY_KEY: Coordinates(x=48, y=-198, z=-55)
+}
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
@@ -112,13 +123,8 @@ class Controller:
         reset to default settings
         """
         logger.info("reset controller state to default settings")
-        self.coordinates = {
-            STORAGE1_KEY: Coordinates(x=119, y=183, z=-50),
-            STORAGE2_KEY: Coordinates(x=6, y=183, z=-50),
-            BELT_DROPOFF_KEY: Coordinates(x=266, y=91, z=5),
-            BELT_PICKUP_KEY: Coordinates(x=267, y=27, z=0),
-            DELIVERY_KEY: Coordinates(x=48, y=-198, z=-55)
-        }
+        self.coordinates = dict(default_coordinates)
+
         # data structure for storage locations
         self.storage = {
             STORAGE1_KEY: Storage(6),
