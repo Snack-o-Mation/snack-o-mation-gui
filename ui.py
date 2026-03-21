@@ -1,10 +1,11 @@
 import argparse
 import json
+import os.path
 import signal
 import sys
 import time
 
-import serial
+
 from PySide6.QtCore import QThread, Qt, QSize, QRectF, Signal, QObject
 from PySide6.QtGui import QFont, QPen, QPainter, QIcon, QColor, QBrush, QPainterPath, QAction
 from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, \
@@ -644,6 +645,22 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     language_dictionary = load_language(args.language)
+
+    # check if the serial port devices are available
+    if not args.sim:
+        if not os.path.exists(args.left):
+            print("Error: Serial port device for left dobot does not exist: '%s'\nIs the dobot connected and powered up?" % args.left)
+            sys.exit(1)
+
+        if not os.path.exists(args.right):
+            print("Error: Serial port device for right dobot does not exist: '%s'\nIs the dobot connected and powered up?" % args.right)
+            sys.exit(1)
+
+        if not os.path.exists(args.microbit):
+            print("Error: Serial port device for the micro:bit radio sniffer does not exist: '%s'\nIs the micro:bit connected?" % args.microbit)
+            sys.exit(1)
+    else:
+        print("Running in simulation mode")
 
     # initialize controller
     controller_instance = Controller(args.left, args.right, args.microbit, NUM_TASKS, args.sim)
