@@ -222,28 +222,22 @@ class Robot:
     def pickup_and_place(self, pickup_coords: Coordinates, place_coords: Coordinates, z_hover=50):
         # move to the pickup coordinates (plus specified z_hover)
         self.dobot.move_to(pickup_coords.x, pickup_coords.y, pickup_coords.z + z_hover, 0)
-        # wait 1 second
-        self.dobot.wait(1000)
         # move down to the pickup coordinates
         self.dobot.move_to(pickup_coords.x, pickup_coords.y, pickup_coords.z, 0)
         # enable suction cup
         self.dobot.suck(True)
-        # wait 1 second
-        self.dobot.wait(1000)
+        # wait 0.5 second
+        self.dobot.wait(500)
         # move to the pickup coordinates (plus specified z_hover)
         self.dobot.move_to(pickup_coords.x, pickup_coords.y, pickup_coords.z + z_hover, 0)
-        # wait 1 second
-        self.dobot.wait(1000)
         # move robot arm to the place coordinates (plus specified z_hover)
         self.dobot.move_to(place_coords.x, place_coords.y, place_coords.z + z_hover, 0)
-        # wait 1 second
-        self.dobot.wait(1000)
         # move robot arm to the place coordinates
         self.dobot.move_to(place_coords.x, place_coords.y, place_coords.z, 0)
         # disable suction cup
         self.dobot.suck(False)
-        # wait 1 second
-        self.dobot.wait(1000)
+        # wait 0.5 second
+        self.dobot.wait(500)
         # move robot arm to the place coordinates (plus specified z_hover)
         self.dobot.move_to(place_coords.x, place_coords.y, place_coords.z + z_hover, 0)
 
