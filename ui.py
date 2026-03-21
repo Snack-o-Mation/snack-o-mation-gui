@@ -12,6 +12,7 @@ from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxL
     QGridLayout, QTextEdit, QSplitter, QMainWindow, QToolBar, QSpinBox, QHBoxLayout, \
     QInputDialog
 
+from model import Storage, BLOXX_OFFSET_Y, BLOXX_OFFSET_X
 from controller import Controller, STORAGE1_KEY, STORAGE2_KEY, BELT_PICKUP_KEY, BELT_DROPOFF_KEY, DELIVERY_KEY
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -25,6 +26,7 @@ FONT_SIZE = 20  # font size for text labels
 FONT_SIZE_POSE = 36  # font size for the robot pose
 FONT_SIZE_TERMINAL = 18  # font size for text in the terminal
 
+WINDOW_TITLE = "TecDay - Snack-o-mation"
 
 def format_coordinates(data):
     """
@@ -47,6 +49,8 @@ def format_number(value):
 class SceneCanvas(QWidget):
     BRUSH_ROBOT_BASE = QBrush(QColor.fromRgb(51, 51, 51))
     BRUSH_CONVEYOR = QBrush(QColor.fromRgb(77, 77, 77))
+    BRUSH_MAOAM = QBrush(QColor.fromRgb(255, 146, 72))
+    BRUSH_EMPTY = QBrush(QColor.fromRgb(200, 200, 200))
     WIDTH_MM = 1200
     CIRCLE_RADIUS = 20
 
@@ -128,6 +132,28 @@ class SceneCanvas(QWidget):
         painter.drawRect(conveyor_center_x - conveyor_width // 2,
                          conveyor_center_y - conveyor_height // 2,
                          conveyor_width, conveyor_height)
+
+        # draw storage
+        for key in [STORAGE1_KEY, STORAGE2_KEY]:
+
+            storage_x = robot_right_center_x + int(default_coordinates[key].y * mm_to_pixel)
+            storage_y = robot_right_center_y + int(default_coordinates[key].x * mm_to_pixel)
+
+            next_pos = self.controller.storage[key].get_next_position()
+            stock = self.controller.storage[key].get_stock()
+
+            pos = 0
+            for i in range(Storage.DIM_X):
+                for k in range(Storage.DIM_Y):
+                    if pos < next_pos or pos >= next_pos + stock:
+                        # empty position
+                        painter.setBrush(self.BRUSH_EMPTY)
+                    else:
+                        painter.setBrush(self.BRUSH_MAOAM)
+                    painter.drawRect(storage_x + int((k-0.45)*BLOXX_OFFSET_Y*mm_to_pixel),
+                                     storage_y - int((i+0.45)*BLOXX_OFFSET_X*mm_to_pixel),
+                                     int(BLOXX_OFFSET_Y*mm_to_pixel*0.9), int(BLOXX_OFFSET_X*mm_to_pixel*0.9))
+                    pos+=1
 
         # draw task coordinates at the correct location
         task = 1
@@ -297,7 +323,7 @@ class MainWidget(QWidget):
 class Window(QMainWindow):
     def __init__(self, controller):
         super().__init__(None)
-        self.setWindowTitle("TecDay - Snack-o-mation")
+        self.setWindowTitle(WINDOW_TITLE)
         width = self.width()
         self.controller = controller
         self.worker_thread = BackgroundThread(self, controller)
