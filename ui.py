@@ -10,7 +10,7 @@ from PySide6.QtCore import QThread, Qt, QSize, QRectF, Signal, QObject
 from PySide6.QtGui import QFont, QPen, QPainter, QIcon, QColor, QBrush, QPainterPath, QAction
 from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, \
     QGridLayout, QTextEdit, QSplitter, QMainWindow, QToolBar, QSpinBox, QHBoxLayout, \
-    QInputDialog
+    QInputDialog, QMessageBox
 
 from controller import Controller, STORAGE1_KEY, STORAGE2_KEY, BELT_PICKUP_KEY, BELT_DROPOFF_KEY, DELIVERY_KEY, \
     default_coordinates
@@ -613,6 +613,12 @@ class Window(QMainWindow):
         # scroll to bottom
         window.textBox.verticalScrollBar().setValue(window.textBox.verticalScrollBar().maximum())
 
+    def notify_user(self, data):
+        if data["type"] == "warning":
+            QMessageBox.warning(self, WINDOW_TITLE, language_dictionary[data["key"]])
+        else:
+            QMessageBox.information(self, WINDOW_TITLE, language_dictionary[data["key"]])
+
     def prompt_for_radio_message(self):
         text, ok = QInputDialog.getText(window, 'Simulate Radio Message', 'Packet content:')
         if ok:
@@ -628,6 +634,7 @@ class ControllerSignals(QObject):
     update_pose = Signal(list)
     update_state = Signal(dict)
     update_packet = Signal(str, bool)
+    notify_user = Signal(dict)
 
 
 class BackgroundThread(QThread):
@@ -639,6 +646,7 @@ class BackgroundThread(QThread):
         self.signals.update_pose.connect(parent.update_pose)
         self.signals.update_packet.connect(parent.update_packet)
         self.signals.update_state.connect(parent.update_state)
+        self.signals.notify_user.connect(parent.notify_user)
         controller.set_parent(self)
 
     def run(self):

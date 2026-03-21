@@ -11,7 +11,9 @@
       "Storage_2": "Storage #2",
       "Release": "Release point",
       "Pickup": "Pick-up point",
-      "Delivery": "Delivery Zone"
+      "Delivery": "Delivery Zone",
+      "notify_delivery_completed": "Orders delivered.",
+      "notify_delivery_error": "Unable to deliver your order."
   },
   "it": {
       "Orders_1": "Ordini magazzino 1",
@@ -25,7 +27,9 @@
       "Storage_2": "Magazzino 2",
       "Release": "Punto di rilascio",
       "Pickup": "Punto di ritiro",
-      "Delivery": "Deposito dolci"
+      "Delivery": "Deposito dolci",
+      "notify_delivery_completed": "Ordine consegnato",
+      "notify_delivery_error": "Impossibile consegnare l'ordine."
   },
   "de": {
       "Orders_1": "Bestellung Lager 1",
@@ -39,7 +43,9 @@
       "Storage_2": "Lager 2",
       "Release": "Ablage Förderband",
       "Pickup": "Aufnahme Förderband",
-      "Delivery": "Warenausgabe"
+      "Delivery": "Warenausgabe",
+      "notify_delivery_completed": "Bestellung ausgeliefert.",
+      "notify_delivery_error": "Bestellung kann nicht ausgeführt werden."
   },
   "fr": {
       "Orders_1": "Commande entrepôt 1",
@@ -53,6 +59,8 @@
       "Storage_2": "Entrepôt 2",
       "Release": "Point de restitution",
       "Pickup": "Point de ramassage",
-      "Delivery": "Dépôt des bonbons"
+      "Delivery": "Dépôt des bonbons",
+      "notify_delivery_completed": "Votre commande a été livrée.",
+      "notify_delivery_error": "Impossible de livrer la commande."
   }
 }

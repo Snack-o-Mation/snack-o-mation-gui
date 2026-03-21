@@ -1,5 +1,4 @@
 import logging
-import time
 from threading import Event
 
 from model import Coordinates, Storage, BLOXX_OFFSET_X, BLOXX_OFFSET_Z
@@ -166,13 +165,18 @@ class Controller:
     def start_delivery(self):
         logger.info("startDelivery requested")
         if not self.isDelivering:
-            if all(self.tasks) and (self.orders[STORAGE1_KEY] > 0 or self.orders[STORAGE2_KEY] > 0) and (
-                    not self.storage[STORAGE1_KEY].is_empty() or not self.storage[STORAGE2_KEY].is_empty()):
-                logger.info("Starting delivery of order:", self.orders)
+            if all(self.tasks) and self.storage[STORAGE1_KEY].get_stock() >= self.orders[STORAGE1_KEY] and self.storage[STORAGE2_KEY].get_stock() >= self.orders[STORAGE2_KEY] and self.orders[STORAGE1_KEY] + self.orders[STORAGE2_KEY] > 0:
+                logger.info("Starting delivery of order: storage 1: %u storage 2: %u" % (self.orders[STORAGE1_KEY], self.orders[STORAGE2_KEY]))
                 self.items_delivered = 0
                 self.current_storage_key = None
                 self.isDelivering = True
                 self._emit_state_update()
+            else:
+                logger.info("Unable to deliver order. Not enough items in storage")
+                self.parent.signals.notify_user.emit({
+                    "key": "notify_delivery_error",
+                    "type": "warning"
+                })
         else:
             logger.error("Already in delivery mode")
 
@@ -251,6 +255,7 @@ class Controller:
                     #  nothing in front of sensor, check if belt is running
                     if not self.conveyor.is_running():
                         # belt is not running, decide from which storage to pick up
+                        logger.info("Storage 1: %u Orders 1: %u Storage 2: %u Orders 2: %u" % (self.storage[STORAGE1_KEY].get_stock(), self.orders[STORAGE1_KEY], self.storage[STORAGE2_KEY].get_stock(), self.orders[STORAGE2_KEY]))
                         if not self.storage[STORAGE1_KEY].is_empty() and self.orders[STORAGE1_KEY] > 0 and not \
                                 self.storage[
                                     STORAGE2_KEY].is_empty() and self.orders[STORAGE2_KEY] > 0:
@@ -271,6 +276,7 @@ class Controller:
 
                         if self.current_storage_key is not None:
                             # pick from storage and place on the belt
+                            logger.info("Delivering item from Storage %u" % (1 if self.current_storage_key == STORAGE1_KEY else 2))
                             offset = self.storage[self.current_storage_key].pop()
                             pickup = self.coordinates[self.current_storage_key] + offset
                             place = self.coordinates[BELT_DROPOFF_KEY]
@@ -283,25 +289,46 @@ class Controller:
                             self.orders[self.current_storage_key] -= 1
                             # update state
                             self._emit_state_update()
+                        else:
+                            logger.info("Delivery not possible. Stopping")
+                            self.isDelivering = False
+                            self._emit_state_update()
                 else:
                     if self.conveyor.is_running():
                         # something in front of sensor, stop belt and pick it up.
                         # wait a bit until the item is directly in front of the sensor
-                        self.conveyor.stop()
-                        # pick up from belt and deliver
-                        # every 3 blocks go to next row of blocks
-                        offset_x = (self.items_delivered // 3) * (BLOXX_OFFSET_X + 10)
-                        offset_z = (self.items_delivered % 3) * BLOXX_OFFSET_Z
-                        pickup = self.coordinates[BELT_PICKUP_KEY]
-                        place = self.coordinates[DELIVERY_KEY] + Coordinates(-offset_x, 0, offset_z)
-                        self.robot_left.pickup_and_place(pickup, place)
-                        self.robot_left.move(Robot.HOME_COORDINATES)
-                        self.items_delivered += 1
-                        if self.orders[STORAGE1_KEY] == 0 and self.orders[STORAGE2_KEY] == 0:
-                            logger.info("Delivery completed: Items delivered: %u" % self.items_delivered)
-                            self.isDelivering = False
-                        # update state
+                        while self.sensor.has_object() and self.isDelivering:
+                            pass
+
+                        if self.isDelivering:
+                            self.conveyor.stop()
+                            # pick up from belt and deliver
+                            # every 3 blocks go to next row of blocks
+                            offset_x = (self.items_delivered // 3) * (BLOXX_OFFSET_X + 10)
+                            offset_z = (self.items_delivered % 3) * BLOXX_OFFSET_Z
+                            pickup = self.coordinates[BELT_PICKUP_KEY]
+                            place = self.coordinates[DELIVERY_KEY] + Coordinates(offset_x, 0, offset_z)
+                            self.robot_left.pickup_and_place(pickup, place, 50)
+                            self.robot_left.move(Robot.HOME_COORDINATES)
+                            self.items_delivered += 1
+                            if self.orders[STORAGE1_KEY] == 0 and self.orders[STORAGE2_KEY] == 0:
+                                logger.info("Delivery completed: Items delivered: %u" % self.items_delivered)
+                                self.isDelivering = False
+                                self.parent.signals.notify_user.emit({
+                                    "key": "notify_delivery_completed",
+                                    "type": "info"
+                                })
+                            # update state
                         self._emit_state_update()
+
+            else:
+                # not self.isDelivering -> manual testing mode for conveyor/light sensor
+                if self.sensor.has_object():
+                    if self.conveyor.is_running():
+                        # something in front of sensor, stop belt
+                        # wait a bit until the Maoam is directly in front of the sensor
+                        self.conveyor.stop()
+
 
         # end of main controller loop -> terminated
         logger.info("main controller loop terminated")
