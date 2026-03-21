@@ -384,11 +384,24 @@ class Window(QMainWindow):
         home_right_action.triggered.connect(self.controller.robot_right.home)
         robot_right_menu.addAction(home_right_action)
 
-        menu_debug = menubar.addMenu('&Debug')
-        dbg_msg_action = QAction('Simulate Radio Message', self)
-        dbg_msg_action.setStatusTip('Input a radio message')
-        dbg_msg_action.triggered.connect(self.prompt_for_radio_message)
-        menu_debug.addAction(dbg_msg_action)
+        conveyormenu = menubar.addMenu('&Conveyor')
+
+        conveyorStartAction = QAction('Run Conveyor until stopped by light sensor', self)
+        conveyorStartAction.setStatusTip('Run Conveyor until stopped by light sensor')
+        conveyorStartAction.triggered.connect(lambda index: self.controller.start_conveyor_manually())
+        conveyormenu.addAction(conveyorStartAction)
+
+        conveyorStopAction = QAction('Stop Conveyor', self)
+        conveyorStopAction.setStatusTip('Stop conveyor')
+        conveyorStopAction.triggered.connect(lambda index: self.controller.stop_conveyor())
+        conveyormenu.addAction(conveyorStopAction)
+
+        debugmenu = menubar.addMenu('&Debug')
+
+        dbgMsgAction = QAction('Simulate Radio Message', self)
+        dbgMsgAction.setStatusTip('Input a radio message')
+        dbgMsgAction.triggered.connect(self.prompt_for_radio_message)
+        debugmenu.addAction(dbgMsgAction)
 
         toolbar = QToolBar('Main ToolBar')
         toolbar.setIconSize(QSize(32, 32))

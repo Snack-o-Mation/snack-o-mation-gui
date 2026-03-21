@@ -183,6 +183,15 @@ class Controller:
         self.robot_right.move(Robot.HOME_COORDINATES)
         self._emit_state_update()
 
+    def start_conveyor_manually(self):
+        if not self.isDelivering:
+            # start the conveyor
+            self.conveyor.start()
+
+    def stop_conveyor(self):
+        self.conveyor.stop()
+
+
     def loop(self):
         """ main loop of the controller """
         self.is_running = True
