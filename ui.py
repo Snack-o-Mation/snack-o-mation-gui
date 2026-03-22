@@ -26,7 +26,7 @@ NUM_TASKS = 5
 FONT_SIZE_TASK = 24
 FONT_SIZE = 20  # font size for text labels
 FONT_SIZE_POSE = 36  # font size for the robot pose
-FONT_SIZE_TERMINAL = 18  # font size for text in the terminal
+FONT_SIZE_TERMINAL = 22  # font size for text in the terminal
 
 WINDOW_TITLE = "TecDay - Snack-o-mation"
 
