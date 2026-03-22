@@ -297,7 +297,7 @@ class Controller:
                 else:
                     if self.conveyor.is_running():
                         # something in front of sensor, stop belt and pick it up.
-                        # wait a bit until the item is directly in front of the sensor
+                        # wait until the item has passed in front of the sensor
                         while self.sensor.has_object() and self.isDelivering:
                             pass
 
@@ -327,7 +327,9 @@ class Controller:
                 if self.sensor.has_object():
                     if self.conveyor.is_running():
                         # something in front of sensor, stop belt
-                        # wait a bit until the Maoam is directly in front of the sensor
+                        # wait until the item has passed in front of the sensor
+                        while self.sensor.has_object():
+                            pass
                         self.conveyor.stop()
 
 
