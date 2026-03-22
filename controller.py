@@ -238,7 +238,7 @@ class Controller:
 
             # check for radio messages
             radio_message = self.sniffer.get_packet()
-            if radio_message is not None:
+            if radio_message is not None and len(radio_message)>0:
                 logger.info("radio packet received: %s" % radio_message)
                 task, data = self.parse_message(radio_message)
                 if task is not None and data is not None:
