@@ -1,3 +1,4 @@
+import copy
 import logging
 from threading import Event
 
@@ -19,7 +20,7 @@ default_coordinates = {
     STORAGE1_KEY: Coordinates(x=119, y=183, z=-50),
     STORAGE2_KEY: Coordinates(x=6, y=183, z=-50),
     BELT_DROPOFF_KEY: Coordinates(x=266, y=91, z=5),
-    BELT_PICKUP_KEY: Coordinates(x=270, y=-6, z=5),
+    BELT_PICKUP_KEY: Coordinates(x=273, y=-6, z=5),
     DELIVERY_KEY: Coordinates(x=48, y=-198, z=-55)
 }
 
@@ -122,7 +123,7 @@ class Controller:
         reset to default settings
         """
         logger.info("reset controller state to default settings")
-        self.coordinates = dict(default_coordinates)
+        self.coordinates = copy.deepcopy(default_coordinates)
 
         # data structure for storage locations
         self.storage = {
