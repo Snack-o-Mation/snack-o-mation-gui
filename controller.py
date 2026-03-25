@@ -29,8 +29,9 @@ logging.basicConfig(level=logging.INFO)
 
 
 def parse_coordinates(text):
-    name = text[0].lower()
-    value = float(text[2:])
+    parts = text.split("=")
+    name = parts[0].lower()
+    value = int(parts[1])
     return name, value
 
 
