@@ -1,6 +1,6 @@
 # Snack-o-Mation TecDay Module
 
-This folder contains the graphical user interface for the Snack-o-Mation automation module developed by ABB Corporate Research Switzerland for the [SATW TecDays](https://mint.satw.ch/de/tecdays).
+This folder contains the graphical user interface for the Snack-o-Mation automation module developed by [ABB](https://www.abb.com) Corporate Research Switzerland for the [SATW TecDays](https://mint.satw.ch/de/tecdays). This work has also been presented at the [IoT Teaching Workshop](https://blogs.uni-bremen.de/teachingiot/) at [EWSN 2025](https://www.ewsn25.cs.kuleuven.be/) in Leuven, Belgium. You can download our research paper [here](https://blogs.uni-bremen.de/teachingiot/files/teach-iot25-final14.pdf).
 
 ## License
 * This project is licensed under the terms of the MIT license (see LICENSE.txt).
@@ -50,6 +50,11 @@ Start the UI with default serial port settings as follows:
 
 Start the UI with custom port settings as follows:  
 `python ui.py --microbit <port-microbit> --left <port-dobot-left> --right <port-dobot-right>`
+
+Start the UI with a different language (default is `de`):
+`python ui.py --microbit <port-microbit> --left <port-dobot-left> --right <port-dobot-right> --language en`
+
+Supported languages: `de`, `en`, `fr`, `it`. Additional languages can be added in the translation file `languages/translations.json`.
 
 ## Known Issues:
 * The UI has issues when running on Windows 10/11. This might be related to a change in the virtual serial port driver by Silicon Labs, see here: https://community.silabs.com/s/question/0D58Y00009WHoU6SAL/latest-driver-v1120-works-incorrectly-with-cp210x-cp2102gmr-on-windows-10-pro?language=de
