@@ -1,3 +1,3 @@
 pyserial
 PySide6
-pydobot
+pydobot @ git+https://github.com/Snack-o-Mation/pydobot.git

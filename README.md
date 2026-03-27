@@ -11,7 +11,7 @@ The following software libraries are required by the GUI:
 * [Python 3](https://python.org)
 * [pySerial](https://github.com/pyserial/pyserial)
 * [pySide6](https://doc.qt.io/qtforpython-6/)
-* [pydobot](https://github.com/luismesas/pydobot)
+* [pydobot](https://github.com/luismesas/pydobot) (Note: we use our own [repository](../pydobot) of pydobot, which is forked version with some time.sleep() statements removed during read/write from/to the serial port)
 
 ## Installation Guide
 1. Install the dependencies using:  
