@@ -15,7 +15,6 @@ from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxL
 from controller import Controller, STORAGE1_KEY, STORAGE2_KEY, BELT_PICKUP_KEY, BELT_DROPOFF_KEY, DELIVERY_KEY, \
     default_coordinates
 from model import Storage, BLOXX_OFFSET_Y, BLOXX_OFFSET_X
-from controller import Controller, STORAGE1_KEY, STORAGE2_KEY, BELT_PICKUP_KEY, BELT_DROPOFF_KEY, DELIVERY_KEY
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
